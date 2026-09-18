@@ -1,0 +1,196 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{pgfplots}
+\definecolor{custred}{HTML}{e6194b}
+\definecolor{custblue}{HTML}{4363d8}
+\definecolor{custpink}{HTML}{fabed4}
+
+\begin{document}
+
+\title{Structural-Similarity-Preserving Lossy Data Compression for CPUs and GPUs}
+
+\maketitle
+\pagestyle{plain}
+
+\section{Artifacts}
+\begin{table}[hbtp]
+    \begin{center}
+        \caption{Average SSIM and minSSIM for the SBLC (0.85) and its Base compressor on the 3 NOA error bounds}
+        \resizebox{1\columnwidth}{!}{
+        \begin{tabular}{c|rr|rr|rr|}
+        \cline{2-7}
+                                            & \multicolumn{2}{c|}{0.01}                               & \multicolumn{2}{c|}{0.001}                              & \multicolumn{2}{c|}{0.0001}                             \\
+                                            & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c|}{minSSIM} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c|}{minSSIM} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c|}{minSSIM} \\ \hline
+        \multicolumn{1}{|c|}{Base}          & BASE_SSIM_01                     & BASE_mSSIM_01                        & BASE_SSIM_001                     & BASE_mSSIM_001                         & BASE_SSIM_0001                     & BASE_mSSIM_0001                         \\
+        \multicolumn{1}{|c|}{SBLC 0.85}     & SBLC_SSIM_01                     & SBLC_mSSIM_01                        & SBLC_SSIM_001                     & SBLC_mSSIM_001                         & SBLC_SSIM_0001                     & SBLC_mSSIM_0001                         \\ \hline
+        \end{tabular}
+        }
+    \end{center}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+\begin{axis}[
+    xmode=log,
+    ymode=log,
+    xlabel={Compression Throughput (GB/s)},
+    ylabel={Compression Ratio},
+    xmin=0, xmax=1000,
+    ymin=0, ymax=10000,
+    grid=major,
+    legend pos=north west
+]
+\addplot[ % 0.01
+    only marks,
+    mark=triangle*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_ctp_01    ser_cr_01        sblcser
+    omp_ctp_01  omp_cr_01        sblcomp
+    cuda_ctp_01   cuda_cr_01        sblccuda
+    base_ctp_01  base_cr_01        base
+    };
+\addplot[ % 0.001
+    only marks,
+    mark=square*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_ctp_001    ser_cr_001       sblcser
+    omp_ctp_001    omp_cr_001        sblcomp
+    cuda_ctp_001    cuda_cr_001        sblccuda
+    base_ctp_001    base_cr_001        base
+    };
+\addplot[ % 0.001
+    only marks,
+    mark=pentagon*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_ctp_0001    ser_cr_0001         sblcser
+    omp_ctp_0001    omp_cr_0001        sblcomp
+    cuda_ctp_0001    cuda_cr_0001        sblccuda
+    base_ctp_0001    base_cr_0001        base
+    };
+\addlegendentry[]{$\mathrm{SBLC_{Serial}}$}
+\addlegendentry[]{$\mathrm{SBLC_{OpenMP}}$}
+\addlegendentry[]{$\mathrm{SBLC_{CUDA}}$}
+\addlegendentry[]{$\mathrm{Base_{CUDA}}$}
+\end{axis}
+\end{tikzpicture}
+\caption{SBLC (0.85) and its Base compressor compression ratio and compression throughput for the 3 NOA error bounds (0.01, 0,001, 0,0001)}
+\end{figure}
+
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+\begin{axis}[
+    xmode=log,
+    ymode=log,
+    xlabel={Decompression Throughput (GB/s)},
+    ylabel={Compression Ratio},
+    xmin=0, xmax=1000,
+    ymin=0, ymax=10000,
+    grid=major,
+    legend pos=north west
+]
+\addplot[ % 0.01
+    only marks,
+    mark=triangle*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_dtp_01    ser_cr_01        sblcser
+    omp_dtp_01  omp_cr_01        sblcomp
+    cuda_dtp_01   cuda_cr_01        sblccuda
+    base_dtp_01  base_cr_01        base
+    };
+\addplot[ % 0.001
+    only marks,
+    mark=square*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_dtp_001    ser_cr_001       sblcser
+    omp_dtp_001    omp_cr_001        sblcomp
+    cuda_dtp_001    cuda_cr_001        sblccuda
+    base_dtp_001    base_cr_001        base
+    };
+\addplot[ % 0.001
+    only marks,
+    mark=pentagon*,
+    mark size=3,
+    scatter,
+            point meta=explicit symbolic,
+            scatter/classes={
+                sblcser={custred},
+                sblcomp={custpink},
+                sblccuda={custblue},
+                base={black}
+            },
+    ] table [meta=label] {
+    % x is tp y is CR
+    x       y       label
+    ser_dtp_0001    ser_cr_0001         sblcser
+    omp_dtp_0001    omp_cr_0001        sblcomp
+    cuda_dtp_0001    cuda_cr_0001        sblccuda
+    base_dtp_0001    base_cr_0001        base
+    };
+\addlegendentry[]{$\mathrm{SBLC_{Serial}}$}
+\addlegendentry[]{$\mathrm{SBLC_{OpenMP}}$}
+\addlegendentry[]{$\mathrm{SBLC_{CUDA}}$}
+\addlegendentry[]{$\mathrm{Base_{CUDA}}$}
+\end{axis}
+\end{tikzpicture}
+\caption{SBLC (0.85) and its Base compressor compression ratio and decompression throughput for the 3 NOA error bounds (0.01, 0,001, 0,0001)}
+\end{figure}
+
+\end{document}
