@@ -39,7 +39,7 @@
 
 import os
 
-print("Begining LaTeX generation")
+print("Beginning LaTeX generation")
 
 # CR
 os.system("python3 aux_scripts/copy_crs_into_tex.py res/minSSIM_compression_ratios.csv src/empty_artifact.tex res/filled_artifact.tex ser_cr")
